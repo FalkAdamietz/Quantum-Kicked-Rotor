@@ -1,6 +1,12 @@
 # Quantum-Kicked-Rotor
 Python tools which visualizes the quantum kicked rotor in phase space, meaning
 in the Husimi representation.
+## Examples
+For those two examples I have chosen K=2.5, m=100 and kicks=51.
+### Example: Chaotic motion
+![Example animation](https://github.com/Bra-A-Ket/Quantum-Kicked-Rotor/blob/main/chaoticmotion.gif)
+### Example: Integrable motion
+![Example animation](https://github.com/Bra-A-Ket/Quantum-Kicked-Rotor/blob/main/integrablemotion.gif)
 ## Features
 - Starts animation for the time evolution of the quantum kicked rotor via mouse
 klick in the plot. The mouse position will be chosen as the initial center

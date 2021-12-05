@@ -412,7 +412,7 @@ def main():
     # -- Changeable parameters --
     K = 2.5
     m = 100
-    kicks = 11
+    kicks = 51
     x0 = 2.31                                       # coordinates of integrable
     p0 = 4.47                                       # island for K=4.7
     saveAni = True
