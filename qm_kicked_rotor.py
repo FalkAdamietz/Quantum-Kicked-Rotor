@@ -32,7 +32,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 import functools
 import os
-from scipy.stats import wasserstein_distance as wd
 
 
 def standardmap(x0, p0, kicks=51, K=0.5):
