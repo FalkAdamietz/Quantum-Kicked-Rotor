@@ -82,8 +82,7 @@ def standardmap(x0, p0, kicks=51, K=0.5):
 
 
 def mouse_click_event(event, ax, m, X_qm, Y_qm, kicks=50, K=0.5,
-                        showClassic=False, saveAni=False, progressbar=False,
-                        phyDistance=False, showCenter=False):
+                        showClassic=False, saveAni=False, progressbar=False):
     """Method to start the animate of the phase space behavior of the
     (quantum) kicked rotor.
 
@@ -132,9 +131,10 @@ def mouse_click_event(event, ax, m, X_qm, Y_qm, kicks=50, K=0.5,
         xpos = event.xdata
         ypos = event.ydata
 
-        ax.lines = []
-        global result
-        result = []
+        try:
+            ax.lines = []   ## TODO: make this thing work...
+        except:
+            pass
 
         if showClassic == True:
             X, P = standardmap(xpos, ypos, kicks, K)
@@ -148,50 +148,20 @@ def mouse_click_event(event, ax, m, X_qm, Y_qm, kicks=50, K=0.5,
         x, p, psi_x, psi_p = wavepacket(m, xpos, ypos)
         V, T = phaseVectors(x, p, K)
 
-        if phyDistance == True:
-            x2, p2, psi_x2, psi_p2 = wavepacket(m, xpos + 2*np.pi/m, ypos + 2*np.pi/m)
-            V2, T2 = phaseVectors(x2, p2, K)
-
         if progressbar == False:
             for kick in range(kicks):
-                if phyDistance == False:
-                    dist = husimi(m, psi_x)
-                    psi_x = timeEvolution(T, V, psi_x)
-                    ax.pcolor(X_qm, Y_qm, np.abs(dist)**2, zorder=-1)
+                dist = husimi(m, psi_x)
+                psi_x = timeEvolution(T, V, psi_x)
+                ax.pcolor(X_qm, Y_qm, np.abs(dist)**2, zorder=-1)
 
-                    if showCenter == True:
-                        ax.lines = []
-                        c_x, c_y = center(X_qm, Y_qm, dist)
-                        ax.plot(c_x, c_y, marker="x", lw=0, color="r")
-
-                    if showClassic == True:
-                        ax.plot(X[kick], P[kick], marker=".", lw=0, color="r",
-                        zorder=1)
-                    elif showClassic == False:
-                        pass
-                    else:
-                        print("BOOLEAN ERROR: '{}' is not type bool."
-                        .format(str(showClassic)))
-
-                # second wavepacket
-                elif phyDistance == True:
-                        dist = husimi(m, psi_x)
-                        psi_x = timeEvolution(T, V, psi_x)
-                        dist2 = husimi(m, psi_x2)
-                        psi_x2 = timeEvolution(T2, V2, psi_x2)
-                        ax.pcolor(X_qm, Y_qm, np.abs(dist)**2+np.abs(dist2)**2, zorder=-1)
-
-                        if showCenter == True:
-                            ax.lines = []
-                            c_x, c_y = center(X_qm, Y_qm, dist)
-                            ax.plot(c_x, c_y, marker="x", lw=0, color="r")
-
-                        global exponent
-                        exponent = lyapunov(xpos, ypos, m, kicks, K)
-
-                        one_distance = physicalDistance(psi_x, psi_x2)
-                        result.append(one_distance)
-
+                if showClassic == True:
+                    classicPlot = ax.plot(X[kick], P[kick], marker=".", lw=0, color="r",
+                    zorder=1)
+                elif showClassic == False:
+                    pass
+                else:
+                    print("BOOLEAN ERROR: '{}' is not type bool."
+                    .format(str(showClassic)))
 
                 ax.set_title(
                 "Quantum Kicked Rotor (Kick = {0}; K = {1:1.1f})"
@@ -201,44 +171,24 @@ def mouse_click_event(event, ax, m, X_qm, Y_qm, kicks=50, K=0.5,
                 if saveAni == True:
                     plt.savefig("pic" + str(kick) + ".png")
 
-                #event.canvas.flush_events()
+                event.canvas.flush_events()
                 event.canvas.draw()
 
         elif progressbar == True:
             import tqdm
             for kick in tqdm.tqdm(range(kicks)):
-                if phyDistance == False:
-                    dist = husimi(m, psi_x)
-                    psi_x = timeEvolution(T, V, psi_x)
-                    ax.pcolor(X_qm, Y_qm, np.abs(dist)**2, zorder=-1)
+                dist = husimi(m, psi_x)
+                psi_x = timeEvolution(T, V, psi_x)
+                ax.pcolor(X_qm, Y_qm, np.abs(dist)**2, zorder=-1)
 
-                    if showCenter == True:
-                        ax.lines = []
-                        c_x, c_y = center(X_qm, Y_qm, dist)
-                        ax.plot(c_x, c_y, marker="x", lw=0, color="r")
-
-                    if showClassic == True:
-                        ax.plot(X[kick], P[kick], marker=".", lw=0, color="r",
-                        zorder=1)
-                    elif showClassic == False:
-                        pass
-                    else:
-                        print("BOOLEAN ERROR: '{}' is not type bool."
-                        .format(str(showClassic)))
-
-                # second wavepacket
-                elif phyDistance == True:
-                        dist = husimi(m, psi_x)
-                        psi_x = timeEvolution(T, V, psi_x)
-                        dist2 = husimi(m, psi_x2)
-                        psi_x2 = timeEvolution(T2, V2, psi_x2)
-                        ax.pcolor(X_qm, Y_qm, np.abs(dist)**2+np.abs(dist2)**2, zorder=-1)
-
-                        if showCenter == True:
-                            ax.lines = []
-                            c_x, c_y = center(X_qm, Y_qm, dist)
-                            ax.plot(c_x, c_y, marker="x", lw=0, color="r")
-
+                if showClassic == True:
+                    classicPlot = ax.plot(X[kick], P[kick], marker=".", lw=0, color="r",
+                    zorder=1)
+                elif showClassic == False:
+                    pass
+                else:
+                    print("BOOLEAN ERROR: '{}' is not type bool."
+                    .format(str(showClassic)))
 
                 ax.set_title(
                 "Quantum Kicked Rotor (Kick = {0}; K = {1:1.1f})"
@@ -248,7 +198,7 @@ def mouse_click_event(event, ax, m, X_qm, Y_qm, kicks=50, K=0.5,
                 if saveAni == True:
                     plt.savefig("pic" + str(kick) + ".png")
 
-                #event.canvas.flush_events()
+                event.canvas.flush_events()
                 event.canvas.draw()
 
         else:
@@ -293,8 +243,8 @@ def wavepacket(m, x0, p0):
     x = 2*np.pi*n/m
     p = 2*np.pi*n/m
 
-    psi_x = np.ones(m).astype(np.complex)
-    psi_p = np.ones(m).astype(np.complex)
+    psi_x = np.ones(m).astype(complex)
+    psi_p = np.ones(m).astype(complex)
 
     psi_x[:] = np.exp(-(x-x0)**2/(2*hbar) + 1j*x*p0/hbar)
     norm_x = np.linalg.norm(psi_x)
@@ -307,6 +257,8 @@ def wavepacket(m, x0, p0):
 
 def husimi(m, psi_x):
     """Calculates the Husimi representation of the quantum phase space.
+
+    Credits: https://github.com/mcooper12590/QuantumMaps
 
     Parameters
     ----------
@@ -324,7 +276,7 @@ def husimi(m, psi_x):
         (m x m)-array of the Husimi phase space distribution.
     """
 
-    dist = np.ones((m, m)).astype(np.complex)
+    dist = np.ones((m, m)).astype(complex)
 
     for i in np.arange(m):
         x0 = 2*np.pi*i/m
@@ -399,83 +351,6 @@ def timeEvolution(T, V, psi_x):
     return inverseFT
 
 
-def lyapunov(x, p, m, kicks, K):
-    X1, P1 = standardmap(x, p, kicks, K)
-    X2, P2 = standardmap(x+2*np.pi/m, p+2*np.pi/m, kicks, K)
-    distance = np.sqrt((X2 - X1)**2 + (P2 - P1)**2)
-    initial_distance = distance[0]
-    t = np.arange(kicks)
-    t[0] = 1
-    exponent = np.log(distance/initial_distance) / t
-
-    return exponent
-
-
-def center(X, Y, dist):
-    func = np.abs(dist)**2
-    M = np.sum(func)
-    m = X.size
-    list_x = []
-    list_y = []
-    for i in range(len(X)):
-        for j in range(len(Y)):
-            list_x.append(i * func[i, j] / M)
-            list_y.append(j * func[i, j] / M)
-    x = np.sum(list_x)
-    y = np.sum(list_y)
-
-    return x*2*np.pi/np.sqrt(m), y*2*np.pi/np.sqrt(m)
-
-
-def physicalDistance(psi_x, psi_x2):
-    m = psi_x.size
-    hbar = 2*np.pi/m
-
-    X = np.arange(m)
-    P = np.arange(m)
-
-    X_p = 2*np.pi*X/m
-    P_p = 2*np.pi*P/m
-
-    p_i = []
-    p_j = []
-
-    P_ij = np.ones((m, m)).astype(np.complex)
-    dist_P_ij = np.ones((m, m))
-
-    distance = []
-
-    for i in range(m):
-        for j in range(m):
-            dx = np.min([np.abs(2*np.pi*i/m-2*np.pi*j/m), 2*np.pi-np.abs(2*np.pi*i/m-2*np.pi*j/m)])
-            dist = np.sqrt(2*dx**2)
-            dist_P_ij[i, j] = dist
-
-    for x in X:
-        for p in P:
-            xXP = (1/np.sqrt(2*np.pi*m)) * ((np.sin(m*X/2))\
-                / (np.sin(X/2 - np.pi*x/m)))\
-                *np.exp(1j*(2*p*m-m+1)*X-1j*np.pi*x/m)
-            XPx = np.conj(xXP)
-            p_j.append(np.abs(np.dot(XPx, psi_x2))**2)
-            p_i.append(np.abs(np.dot(XPx, psi_x))**2)
-
-
-    for i in range(100):
-        random = np.random.rand(m)
-        for n in range(len(p_i)):
-            sum = np.sum(random)
-            random = random * p_i[n] / sum
-            P_ij[n, :] = random
-
-        distance.append(np.sum(P_ij*dist_P_ij))
-
-    minimum = np.min(distance)
-
-    return minimum
-
-
-
 def main():
     """Initiate all functions and set up the animation.
 
@@ -536,16 +411,14 @@ def main():
     """
 
     # -- Changeable parameters --
-    K = 4.7
+    K = 2.5
     m = 100
-    kicks = 51
+    kicks = 11
     x0 = 2.31                                       # coordinates of integrable
     p0 = 4.47                                       # island for K=4.7
-    saveAni = False
+    saveAni = True
     showClassic = False
     progressbar = False
-    phyDistance = False
-    showCenter = True
     # -- Changeable parameters -- END --
 
     parameters = ["K", "m", "kicks", "x0", "p0", "saveAni", "showClassic",
@@ -580,20 +453,12 @@ def main():
     on_click = functools.partial(mouse_click_event, ax=ax, K=K, m=m,
                                 kicks=kicks, X_qm=X_qm, Y_qm=Y_qm,
                                 showClassic=showClassic, saveAni=saveAni,
-                                progressbar=progressbar,
-                                phyDistance=phyDistance, showCenter=showCenter)
+                                progressbar=progressbar)
 
 
     fig.canvas.mpl_connect("button_press_event", on_click)
 
     plt.show()
-
-    if phyDistance == True:
-        plt.plot(np.arange(kicks), exponent)
-        plt.xlabel("time")
-        plt.ylabel("Lyapunov exponent")
-        plt.show()
-        print(result)
 
     if saveAni == True:
         os.system(
