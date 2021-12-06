@@ -1,5 +1,5 @@
 # Quantum-Kicked-Rotor
-Python tools which visualizes the quantum kicked rotor in phase space, meaning
+Python tool which visualizes the quantum kicked rotor in phase space, meaning
 in the Husimi representation.
 ## Examples
 For those two examples I have chosen K=2.5, m=100 and kicks=51.
@@ -20,15 +20,15 @@ classical kicked rotor.
 This program works with external packages, which are the following:
 - numpy
 ```bash
--m pip install numpy
+python3 -m pip install numpy
 ```
 - matplotlib
 ```bash
--m pip install matplotlib
+python3 -m pip install matplotlib
 ```
 - tqdm (optional, only if progressbar=True)
 ```bash
--m pip install tqdm
+python3 -m pip install tqdm
 ```
 ### FFmpeg
 FFmpeg is only needed, if you want to save the animation.
